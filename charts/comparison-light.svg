@@ -1,0 +1,378 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 968" width="1200" height="968" font-family="system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" role="img" aria-label="Benchmark results with Jev routing on and off">
+<rect width="1200" height="968" fill="#fcfcfb"/>
+<text x="32" y="40" font-size="20" fill="#0b0b0b" text-anchor="start" font-weight="650">Same task, same agent: Jev routing on vs. off</text>
+<text x="32" y="62" font-size="13" fill="#52514e" text-anchor="start" font-weight="400">Bars are medians, dots are the individual runs (5 per mode), drawn relative to each pair's baseline median.</text>
+<text x="32" y="80" font-size="13" fill="#52514e" text-anchor="start" font-weight="400">Lower is better, except for checks passed. Codex: gpt-6-astra, Claude Code: claude-fable-5-1.</text>
+<rect x="32" y="94" width="14" height="8" rx="4" fill="#2a78d6"/>
+<text x="52" y="102" font-size="12" fill="#52514e" text-anchor="start" font-weight="400">Jev routing on</text>
+<rect x="164.39999999999998" y="94" width="14" height="8" rx="4" fill="#eb6834"/>
+<text x="184.39999999999998" y="102" font-size="12" fill="#52514e" text-anchor="start" font-weight="400">Routing off (baseline)</text>
+<text x="32" y="138" font-size="14" fill="#0b0b0b" text-anchor="start" font-weight="600">Input tokens per run</text>
+<line x1="182" y1="154" x2="182" y2="332" stroke="#c3c2b7" stroke-width="1"/>
+<text x="182" y="346" font-size="11" fill="#898781" text-anchor="middle" font-weight="400">0%</text>
+<line x1="257.5" y1="154" x2="257.5" y2="332" stroke="#e1e0d9" stroke-width="1"/>
+<text x="257.5" y="346" font-size="11" fill="#898781" text-anchor="middle" font-weight="400">50%</text>
+<line x1="333" y1="154" x2="333" y2="332" stroke="#c3c2b7" stroke-width="1"/>
+<text x="333" y="346" font-size="11" fill="#898781" text-anchor="middle" font-weight="400">baseline</text>
+<line x1="408.5" y1="154" x2="408.5" y2="332" stroke="#e1e0d9" stroke-width="1"/>
+<text x="408.5" y="346" font-size="11" fill="#898781" text-anchor="middle" font-weight="400">150%</text>
+<line x1="484" y1="154" x2="484" y2="332" stroke="#e1e0d9" stroke-width="1"/>
+<text x="484" y="346" font-size="11" fill="#898781" text-anchor="middle" font-weight="400">200%</text>
+<text x="170" y="178" font-size="12" fill="#52514e" text-anchor="end" font-weight="400">Codex · bugfix</text>
+<path d="M182,162 H318.93509037312856 a4,4 0 0 1 0,8 H182 Z" fill="#2a78d6" opacity="0.55"/>
+<circle cx="327.4213986502211" cy="166" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="322.2029904584594" cy="166" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="322.93509037312856" cy="166" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="294.5398630827709" cy="166" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="325.534045070204" cy="166" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<path d="M182,178 H329 a4,4 0 0 1 0,8 H182 Z" fill="#eb6834" opacity="0.55"/>
+<circle cx="333" cy="182" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="332.2137246916453" cy="182" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="333.15081258242185" cy="182" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="331.9252773252657" cy="182" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="334.63843960902955" cy="182" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<text x="494" y="170" font-size="11" fill="#0b0b0b" text-anchor="start" font-weight="600">96k  -7%</text>
+<text x="494" y="186" font-size="11" fill="#52514e" text-anchor="start" font-weight="400">103k</text>
+<text x="170" y="224" font-size="12" fill="#52514e" text-anchor="end" font-weight="400">Codex · san</text>
+<path d="M182,208 H331.59677143589886 a4,4 0 0 1 0,8 H182 Z" fill="#2a78d6" opacity="0.55"/>
+<circle cx="431.8580343658279" cy="212" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="335.59677143589886" cy="212" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="357.5456216339441" cy="212" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="311.85040463910184" cy="212" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="302.5831362379962" cy="212" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<path d="M182,224 H329 a4,4 0 0 1 0,8 H182 Z" fill="#eb6834" opacity="0.55"/>
+<circle cx="312.2742356025418" cy="228" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="335.4063702162824" cy="228" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="358.67189325506513" cy="228" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="312.081682956715" cy="228" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="333" cy="228" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<text x="494" y="216" font-size="11" fill="#0b0b0b" text-anchor="start" font-weight="600">143k  +2%</text>
+<text x="494" y="232" font-size="11" fill="#52514e" text-anchor="start" font-weight="400">140k</text>
+<text x="170" y="270" font-size="12" fill="#52514e" text-anchor="end" font-weight="400">Claude Code · bugfix</text>
+<path d="M182,254 H300.05747536790847 a4,4 0 0 1 0,8 H182 Z" fill="#2a78d6" opacity="0.55"/>
+<circle cx="304.05747536790847" cy="258" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="336.0957454591211" cy="258" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="273.80480439178416" cy="258" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="329.2038896318428" cy="258" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="282.8759660432682" cy="258" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<path d="M182,270 H329 a4,4 0 0 1 0,8 H182 Z" fill="#eb6834" opacity="0.55"/>
+<circle cx="333" cy="274" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="315.28629118394986" cy="274" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="342.51347412715927" cy="274" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="305.17982670478654" cy="274" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="370.6040722326756" cy="274" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<text x="494" y="262" font-size="11" fill="#0b0b0b" text-anchor="start" font-weight="600">276k  -19%</text>
+<text x="494" y="278" font-size="11" fill="#52514e" text-anchor="start" font-weight="400">342k</text>
+<text x="170" y="316" font-size="12" fill="#52514e" text-anchor="end" font-weight="400">Claude Code · san</text>
+<path d="M182,300 H288.9109376561372 a4,4 0 0 1 0,8 H182 Z" fill="#2a78d6" opacity="0.55"/>
+<circle cx="324.8659679120635" cy="304" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="259.58313440293125" cy="304" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="280.64316216066175" cy="304" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="299.10920557375226" cy="304" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="292.9109376561372" cy="304" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<path d="M182,316 H329 a4,4 0 0 1 0,8 H182 Z" fill="#eb6834" opacity="0.55"/>
+<circle cx="437.82231721534447" cy="320" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="333" cy="320" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="281.0321256870038" cy="320" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="293.2244556709044" cy="320" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="374.35621162493754" cy="320" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<text x="494" y="308" font-size="11" fill="#0b0b0b" text-anchor="start" font-weight="600">331k  -27%</text>
+<text x="494" y="324" font-size="11" fill="#52514e" text-anchor="start" font-weight="400">450k</text>
+<text x="620" y="138" font-size="14" fill="#0b0b0b" text-anchor="start" font-weight="600">Output tokens per run</text>
+<line x1="770" y1="154" x2="770" y2="332" stroke="#c3c2b7" stroke-width="1"/>
+<text x="770" y="346" font-size="11" fill="#898781" text-anchor="middle" font-weight="400">0%</text>
+<line x1="845.5" y1="154" x2="845.5" y2="332" stroke="#e1e0d9" stroke-width="1"/>
+<text x="845.5" y="346" font-size="11" fill="#898781" text-anchor="middle" font-weight="400">50%</text>
+<line x1="921" y1="154" x2="921" y2="332" stroke="#c3c2b7" stroke-width="1"/>
+<text x="921" y="346" font-size="11" fill="#898781" text-anchor="middle" font-weight="400">baseline</text>
+<line x1="996.5" y1="154" x2="996.5" y2="332" stroke="#e1e0d9" stroke-width="1"/>
+<text x="996.5" y="346" font-size="11" fill="#898781" text-anchor="middle" font-weight="400">150%</text>
+<line x1="1072" y1="154" x2="1072" y2="332" stroke="#e1e0d9" stroke-width="1"/>
+<text x="1072" y="346" font-size="11" fill="#898781" text-anchor="middle" font-weight="400">200%</text>
+<text x="758" y="178" font-size="12" fill="#52514e" text-anchor="end" font-weight="400">Codex · bugfix</text>
+<path d="M770,162 H831.4849663954723 a4,4 0 0 1 0,8 H770 Z" fill="#2a78d6" opacity="0.55"/>
+<circle cx="835.4849663954723" cy="166" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="832.4938096922533" cy="166" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="833.5086664308454" cy="166" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="838.5295366112487" cy="166" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="839.5978068623983" cy="166" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<path d="M770,178 H917 a4,4 0 0 1 0,8 H770 Z" fill="#eb6834" opacity="0.55"/>
+<circle cx="925.7538026176159" cy="182" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="920.2522108241952" cy="182" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="941.2971347718429" cy="182" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="912.1333569154581" cy="182" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="921" cy="182" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<text x="1082" y="170" font-size="11" fill="#0b0b0b" text-anchor="start" font-weight="600">1,226  -57%</text>
+<text x="1082" y="186" font-size="11" fill="#52514e" text-anchor="start" font-weight="400">2,827</text>
+<text x="758" y="224" font-size="12" fill="#52514e" text-anchor="end" font-weight="400">Codex · san</text>
+<path d="M770,208 H917.1237704918033 a4,4 0 0 1 0,8 H770 Z" fill="#2a78d6" opacity="0.55"/>
+<circle cx="949.5084699453553" cy="212" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="921.1237704918033" cy="212" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="914.770218579235" cy="212" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="921.1237704918033" cy="212" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="902.9707650273224" cy="212" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<path d="M770,224 H917 a4,4 0 0 1 0,8 H770 Z" fill="#eb6834" opacity="0.55"/>
+<circle cx="915.4715846994536" cy="228" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="911.8409836065573" cy="228" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="924.0530054644809" cy="228" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="929.003825136612" cy="228" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="921" cy="228" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<text x="1082" y="216" font-size="11" fill="#0b0b0b" text-anchor="start" font-weight="600">3,663</text>
+<text x="1082" y="232" font-size="11" fill="#52514e" text-anchor="start" font-weight="400">3,660</text>
+<text x="758" y="270" font-size="12" fill="#52514e" text-anchor="end" font-weight="400">Claude Code · bugfix</text>
+<path d="M770,254 H896.7049491119537 a4,4 0 0 1 0,8 H770 Z" fill="#2a78d6" opacity="0.55"/>
+<circle cx="996.4095988824586" cy="258" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="900.7049491119537" cy="258" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="866.4579924166833" cy="258" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="918.5742366793055" cy="258" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="896.4410297345839" cy="258" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<path d="M770,270 H917 a4,4 0 0 1 0,8 H770 Z" fill="#eb6834" opacity="0.55"/>
+<circle cx="921" cy="274" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="920.6986629415286" cy="274" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="984.3711833965276" cy="274" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="903.8087208142088" cy="274" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="942.5154659748553" cy="274" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<text x="1082" y="262" font-size="11" fill="#0b0b0b" text-anchor="start" font-weight="600">8,675  -13%</text>
+<text x="1082" y="278" font-size="11" fill="#52514e" text-anchor="start" font-weight="400">10,022</text>
+<text x="758" y="316" font-size="12" fill="#52514e" text-anchor="end" font-weight="400">Claude Code · san</text>
+<path d="M770,300 H881.0918793765529 a4,4 0 0 1 0,8 H770 Z" fill="#2a78d6" opacity="0.55"/>
+<circle cx="890.6175175062119" cy="304" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="885.0918793765529" cy="304" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="880.5383442511859" cy="304" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="871.7723627738875" cy="304" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="921.8271402755817" cy="304" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<path d="M770,316 H917 a4,4 0 0 1 0,8 H770 Z" fill="#eb6834" opacity="0.55"/>
+<circle cx="932.204766207364" cy="320" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="954.3329003840072" cy="320" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="888.9376552970409" cy="320" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="898.9315563587079" cy="320" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="921" cy="320" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<text x="1082" y="308" font-size="11" fill="#0b0b0b" text-anchor="start" font-weight="600">13,497  -24%</text>
+<text x="1082" y="324" font-size="11" fill="#52514e" text-anchor="start" font-weight="400">17,708</text>
+<text x="32" y="406" font-size="14" fill="#0b0b0b" text-anchor="start" font-weight="600">LLM requests per run</text>
+<line x1="182" y1="422" x2="182" y2="600" stroke="#c3c2b7" stroke-width="1"/>
+<text x="182" y="614" font-size="11" fill="#898781" text-anchor="middle" font-weight="400">0%</text>
+<line x1="257.5" y1="422" x2="257.5" y2="600" stroke="#e1e0d9" stroke-width="1"/>
+<text x="257.5" y="614" font-size="11" fill="#898781" text-anchor="middle" font-weight="400">50%</text>
+<line x1="333" y1="422" x2="333" y2="600" stroke="#c3c2b7" stroke-width="1"/>
+<text x="333" y="614" font-size="11" fill="#898781" text-anchor="middle" font-weight="400">baseline</text>
+<line x1="408.5" y1="422" x2="408.5" y2="600" stroke="#e1e0d9" stroke-width="1"/>
+<text x="408.5" y="614" font-size="11" fill="#898781" text-anchor="middle" font-weight="400">150%</text>
+<line x1="484" y1="422" x2="484" y2="600" stroke="#e1e0d9" stroke-width="1"/>
+<text x="484" y="614" font-size="11" fill="#898781" text-anchor="middle" font-weight="400">200%</text>
+<text x="170" y="446" font-size="12" fill="#52514e" text-anchor="end" font-weight="400">Codex · bugfix</text>
+<path d="M182,430 H329 a4,4 0 0 1 0,8 H182 Z" fill="#2a78d6" opacity="0.55"/>
+<circle cx="333" cy="434" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="333" cy="434" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="333" cy="434" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="302.8" cy="434" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="333" cy="434" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<path d="M182,446 H329 a4,4 0 0 1 0,8 H182 Z" fill="#eb6834" opacity="0.55"/>
+<circle cx="333" cy="450" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="333" cy="450" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="333" cy="450" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="333" cy="450" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="363.2" cy="450" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<text x="494" y="438" font-size="11" fill="#0b0b0b" text-anchor="start" font-weight="600">5</text>
+<text x="494" y="454" font-size="11" fill="#52514e" text-anchor="start" font-weight="400">5</text>
+<text x="170" y="492" font-size="12" fill="#52514e" text-anchor="end" font-weight="400">Codex · san</text>
+<path d="M182,476 H329 a4,4 0 0 1 0,8 H182 Z" fill="#2a78d6" opacity="0.55"/>
+<circle cx="397.7142857142857" cy="480" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="333" cy="480" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="354.57142857142856" cy="480" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="311.42857142857144" cy="480" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="311.42857142857144" cy="480" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<path d="M182,492 H329 a4,4 0 0 1 0,8 H182 Z" fill="#eb6834" opacity="0.55"/>
+<circle cx="311.42857142857144" cy="496" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="333" cy="496" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="354.57142857142856" cy="496" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="311.42857142857144" cy="496" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="354.57142857142856" cy="496" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<text x="494" y="484" font-size="11" fill="#0b0b0b" text-anchor="start" font-weight="600">7</text>
+<text x="494" y="500" font-size="11" fill="#52514e" text-anchor="start" font-weight="400">7</text>
+<text x="170" y="538" font-size="12" fill="#52514e" text-anchor="end" font-weight="400">Claude Code · bugfix</text>
+<path d="M182,522 H295.44444444444446 a4,4 0 0 1 0,8 H182 Z" fill="#2a78d6" opacity="0.55"/>
+<circle cx="291.05555555555554" cy="526" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="341.3888888888889" cy="526" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="291.05555555555554" cy="526" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="333" cy="526" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="299.44444444444446" cy="526" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<path d="M182,538 H329 a4,4 0 0 1 0,8 H182 Z" fill="#eb6834" opacity="0.55"/>
+<circle cx="333" cy="542" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="324.6111111111111" cy="542" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="333" cy="542" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="316.22222222222223" cy="542" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="358.1666666666667" cy="542" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<text x="494" y="530" font-size="11" fill="#0b0b0b" text-anchor="start" font-weight="600">14  -22%</text>
+<text x="494" y="546" font-size="11" fill="#52514e" text-anchor="start" font-weight="400">18</text>
+<text x="170" y="584" font-size="12" fill="#52514e" text-anchor="end" font-weight="400">Claude Code · san</text>
+<path d="M182,568 H300.6875 a4,4 0 0 1 0,8 H182 Z" fill="#2a78d6" opacity="0.55"/>
+<circle cx="361.3125" cy="572" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="276.375" cy="572" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="304.6875" cy="572" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="333" cy="572" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="304.6875" cy="572" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<path d="M182,584 H329 a4,4 0 0 1 0,8 H182 Z" fill="#eb6834" opacity="0.55"/>
+<circle cx="446.25" cy="588" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="333" cy="588" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="304.6875" cy="588" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="323.5625" cy="588" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="389.625" cy="588" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<text x="494" y="576" font-size="11" fill="#0b0b0b" text-anchor="start" font-weight="600">13  -19%</text>
+<text x="494" y="592" font-size="11" fill="#52514e" text-anchor="start" font-weight="400">16</text>
+<text x="620" y="406" font-size="14" fill="#0b0b0b" text-anchor="start" font-weight="600">Wall-clock seconds per run</text>
+<line x1="770" y1="422" x2="770" y2="600" stroke="#c3c2b7" stroke-width="1"/>
+<text x="770" y="614" font-size="11" fill="#898781" text-anchor="middle" font-weight="400">0%</text>
+<line x1="845.5" y1="422" x2="845.5" y2="600" stroke="#e1e0d9" stroke-width="1"/>
+<text x="845.5" y="614" font-size="11" fill="#898781" text-anchor="middle" font-weight="400">50%</text>
+<line x1="921" y1="422" x2="921" y2="600" stroke="#c3c2b7" stroke-width="1"/>
+<text x="921" y="614" font-size="11" fill="#898781" text-anchor="middle" font-weight="400">baseline</text>
+<line x1="996.5" y1="422" x2="996.5" y2="600" stroke="#e1e0d9" stroke-width="1"/>
+<text x="996.5" y="614" font-size="11" fill="#898781" text-anchor="middle" font-weight="400">150%</text>
+<line x1="1072" y1="422" x2="1072" y2="600" stroke="#e1e0d9" stroke-width="1"/>
+<text x="1072" y="614" font-size="11" fill="#898781" text-anchor="middle" font-weight="400">200%</text>
+<text x="758" y="446" font-size="12" fill="#52514e" text-anchor="end" font-weight="400">Codex · bugfix</text>
+<path d="M770,430 H858.2019531887736 a4,4 0 0 1 0,8 H770 Z" fill="#2a78d6" opacity="0.55"/>
+<circle cx="855.8775101295694" cy="434" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="864.1382816094513" cy="434" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="853.7282752274515" cy="434" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="862.2019531887736" cy="434" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="872.060643839886" cy="434" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<path d="M770,446 H917 a4,4 0 0 1 0,8 H770 Z" fill="#eb6834" opacity="0.55"/>
+<circle cx="911.4035204891877" cy="450" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="927.4454635854966" cy="450" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="921" cy="450" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="900.3122133665792" cy="450" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="936.8693767902994" cy="450" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<text x="1082" y="438" font-size="11" fill="#0b0b0b" text-anchor="start" font-weight="600">41 s  -39%</text>
+<text x="1082" y="454" font-size="11" fill="#52514e" text-anchor="start" font-weight="400">67 s</text>
+<text x="758" y="492" font-size="12" fill="#52514e" text-anchor="end" font-weight="400">Codex · san</text>
+<path d="M770,476 H929.6272294010711 a4,4 0 0 1 0,8 H770 Z" fill="#2a78d6" opacity="0.55"/>
+<circle cx="970.0881688203212" cy="480" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="932.7109762688547" cy="480" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="935.7935930821009" cy="480" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="933.6272294010711" cy="480" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="899.9206136687466" cy="480" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<path d="M770,492 H917 a4,4 0 0 1 0,8 H770 Z" fill="#eb6834" opacity="0.55"/>
+<circle cx="904.995246401022" cy="496" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="908.5638112317595" cy="496" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="923.0587874023486" cy="496" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="921" cy="496" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="947.9979364221491" cy="496" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<text x="1082" y="484" font-size="11" fill="#0b0b0b" text-anchor="start" font-weight="600">88 s  +8%</text>
+<text x="1082" y="500" font-size="11" fill="#52514e" text-anchor="start" font-weight="400">81 s</text>
+<text x="758" y="538" font-size="12" fill="#52514e" text-anchor="end" font-weight="400">Claude Code · bugfix</text>
+<path d="M770,522 H926.7076545943381 a4,4 0 0 1 0,8 H770 Z" fill="#2a78d6" opacity="0.55"/>
+<circle cx="1040.211040501488" cy="526" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="944.9331732635544" cy="526" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="871.2557330381148" cy="526" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="930.7076545943381" cy="526" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="896.2147067703766" cy="526" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<path d="M770,538 H917 a4,4 0 0 1 0,8 H770 Z" fill="#eb6834" opacity="0.55"/>
+<circle cx="911.9241082340086" cy="542" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="921" cy="542" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="953.4608859430938" cy="542" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="898.3238393742901" cy="542" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="927.7941641625811" cy="542" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<text x="1082" y="530" font-size="11" fill="#0b0b0b" text-anchor="start" font-weight="600">148 s  +6%</text>
+<text x="1082" y="546" font-size="11" fill="#52514e" text-anchor="start" font-weight="400">139 s</text>
+<text x="758" y="584" font-size="12" fill="#52514e" text-anchor="end" font-weight="400">Claude Code · san</text>
+<path d="M770,568 H878.3887877425473 a4,4 0 0 1 0,8 H770 Z" fill="#2a78d6" opacity="0.55"/>
+<circle cx="909.8843964085877" cy="572" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="880.0395687456321" cy="572" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="882.3887877425473" cy="572" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="876.8508148339395" cy="572" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="923.4473551839108" cy="572" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<path d="M770,584 H917 a4,4 0 0 1 0,8 H770 Z" fill="#eb6834" opacity="0.55"/>
+<circle cx="936.4678762681007" cy="588" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="950.3259157700749" cy="588" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="888.143870160741" cy="588" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="917.0322060833219" cy="588" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="921" cy="588" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<text x="1082" y="576" font-size="11" fill="#0b0b0b" text-anchor="start" font-weight="600">167 s  -26%</text>
+<text x="1082" y="592" font-size="11" fill="#52514e" text-anchor="start" font-weight="400">225 s</text>
+<text x="32" y="674" font-size="14" fill="#0b0b0b" text-anchor="start" font-weight="600">Hidden checks passed</text>
+<line x1="182" y1="690" x2="182" y2="868" stroke="#c3c2b7" stroke-width="1"/>
+<text x="182" y="882" font-size="11" fill="#898781" text-anchor="middle" font-weight="400">0%</text>
+<line x1="257.5" y1="690" x2="257.5" y2="868" stroke="#e1e0d9" stroke-width="1"/>
+<text x="257.5" y="882" font-size="11" fill="#898781" text-anchor="middle" font-weight="400">25%</text>
+<line x1="333" y1="690" x2="333" y2="868" stroke="#e1e0d9" stroke-width="1"/>
+<text x="333" y="882" font-size="11" fill="#898781" text-anchor="middle" font-weight="400">50%</text>
+<line x1="408.5" y1="690" x2="408.5" y2="868" stroke="#e1e0d9" stroke-width="1"/>
+<text x="408.5" y="882" font-size="11" fill="#898781" text-anchor="middle" font-weight="400">75%</text>
+<line x1="484" y1="690" x2="484" y2="868" stroke="#e1e0d9" stroke-width="1"/>
+<text x="484" y="882" font-size="11" fill="#898781" text-anchor="middle" font-weight="400">100%</text>
+<text x="170" y="714" font-size="12" fill="#52514e" text-anchor="end" font-weight="400">Codex · bugfix</text>
+<path d="M182,698 H480 a4,4 0 0 1 0,8 H182 Z" fill="#2a78d6" opacity="0.55"/>
+<circle cx="484" cy="702" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="484" cy="702" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="484" cy="702" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="484" cy="702" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="484" cy="702" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<path d="M182,714 H480 a4,4 0 0 1 0,8 H182 Z" fill="#eb6834" opacity="0.55"/>
+<circle cx="484" cy="718" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="484" cy="718" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="484" cy="718" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="484" cy="718" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="484" cy="718" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<text x="494" y="706" font-size="11" fill="#0b0b0b" text-anchor="start" font-weight="600">100%</text>
+<text x="494" y="722" font-size="11" fill="#52514e" text-anchor="start" font-weight="400">100%</text>
+<text x="170" y="760" font-size="12" fill="#52514e" text-anchor="end" font-weight="400">Codex · san</text>
+<path d="M182,744 H480 a4,4 0 0 1 0,8 H182 Z" fill="#2a78d6" opacity="0.55"/>
+<circle cx="484" cy="748" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="484" cy="748" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="484" cy="748" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="484" cy="748" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="484" cy="748" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<path d="M182,760 H480 a4,4 0 0 1 0,8 H182 Z" fill="#eb6834" opacity="0.55"/>
+<circle cx="484" cy="764" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="484" cy="764" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="484" cy="764" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="484" cy="764" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="484" cy="764" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<text x="494" y="752" font-size="11" fill="#0b0b0b" text-anchor="start" font-weight="600">100%</text>
+<text x="494" y="768" font-size="11" fill="#52514e" text-anchor="start" font-weight="400">100%</text>
+<text x="170" y="806" font-size="12" fill="#52514e" text-anchor="end" font-weight="400">Claude Code · bugfix</text>
+<path d="M182,790 H480 a4,4 0 0 1 0,8 H182 Z" fill="#2a78d6" opacity="0.55"/>
+<circle cx="484" cy="794" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="484" cy="794" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="484" cy="794" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="484" cy="794" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="484" cy="794" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<path d="M182,806 H480 a4,4 0 0 1 0,8 H182 Z" fill="#eb6834" opacity="0.55"/>
+<circle cx="484" cy="810" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="484" cy="810" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="484" cy="810" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="484" cy="810" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="484" cy="810" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<text x="494" y="798" font-size="11" fill="#0b0b0b" text-anchor="start" font-weight="600">100%</text>
+<text x="494" y="814" font-size="11" fill="#52514e" text-anchor="start" font-weight="400">100%</text>
+<text x="170" y="852" font-size="12" fill="#52514e" text-anchor="end" font-weight="400">Claude Code · san</text>
+<path d="M182,836 H480 a4,4 0 0 1 0,8 H182 Z" fill="#2a78d6" opacity="0.55"/>
+<circle cx="484" cy="840" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="484" cy="840" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="484" cy="840" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="484" cy="840" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="484" cy="840" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<path d="M182,852 H480 a4,4 0 0 1 0,8 H182 Z" fill="#eb6834" opacity="0.55"/>
+<circle cx="484" cy="856" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="484" cy="856" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="484" cy="856" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="484" cy="856" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="484" cy="856" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<text x="494" y="844" font-size="11" fill="#0b0b0b" text-anchor="start" font-weight="600">100%</text>
+<text x="494" y="860" font-size="11" fill="#52514e" text-anchor="start" font-weight="400">100%</text>
+<text x="620" y="674" font-size="14" fill="#0b0b0b" text-anchor="start" font-weight="600">Solved runs and what Jev itself cost</text>
+<text x="620" y="704" font-size="12" fill="#0b0b0b" text-anchor="start" font-weight="600">Codex · bugfix</text>
+<text x="620" y="721" font-size="12" fill="#52514e" text-anchor="start" font-weight="400">Solved 5/5 with routing, 5/5 without.</text>
+<text x="620" y="737" font-size="12" fill="#52514e" text-anchor="start" font-weight="400">Jev steered 24 of 24 requests, reading 123k tokens ($0.0052).</text>
+<text x="620" y="758" font-size="12" fill="#0b0b0b" text-anchor="start" font-weight="600">Codex · san</text>
+<text x="620" y="775" font-size="12" fill="#52514e" text-anchor="start" font-weight="400">Solved 5/5 with routing, 5/5 without.</text>
+<text x="620" y="791" font-size="12" fill="#52514e" text-anchor="start" font-weight="400">Jev steered 35 of 37 requests, reading 251k tokens ($0.0105).</text>
+<text x="620" y="812" font-size="12" fill="#0b0b0b" text-anchor="start" font-weight="600">Claude Code · bugfix</text>
+<text x="620" y="829" font-size="12" fill="#52514e" text-anchor="start" font-weight="400">Solved 5/5 with routing, 5/5 without.</text>
+<text x="620" y="845" font-size="12" fill="#52514e" text-anchor="start" font-weight="400">Jev steered 35 of 77 requests, reading 601k tokens ($0.0253).</text>
+<text x="620" y="866" font-size="12" fill="#0b0b0b" text-anchor="start" font-weight="600">Claude Code · san</text>
+<text x="620" y="883" font-size="12" fill="#52514e" text-anchor="start" font-weight="400">Solved 5/5 with routing, 5/5 without.</text>
+<text x="620" y="899" font-size="12" fill="#52514e" text-anchor="start" font-weight="400">Jev steered 36 of 71 requests, reading 686k tokens ($0.0288).</text>
+</svg>

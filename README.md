@@ -7,36 +7,56 @@ coding agent (Codex or Claude Code) the same task twice, once with Jev routing o
 off, meters every token through the gateway, and scores the result with a verifier the agent never
 sees.
 
-## Results so far
+## Results
 
-**These are preliminary: one run per mode.** Agents vary a lot from one run to the next, so read
-them as a first signal, not a measurement. More repetitions are the next step.
+Two tasks, two agents, five runs per mode, 40 agent sessions in all (2026-09-18). Codex 0.154 with
+`gpt-6-astra` on a ChatGPT subscription, Claude Code 2.1 with `claude-fable-5-1` on a claude.ai
+subscription, real Jev (`jev-latest`) with the gateway's default thresholds. Both agents ran clean:
+no MCP servers, plugins, skills or personal settings, only their built-in coding tools.
 
-Task `chess-bugfix` (find and fix five injected bugs in a chess engine), Codex 0.154 on a ChatGPT
-subscription, model `gpt-6-astra`, real Jev (`jev-latest`), 2026-09-18:
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="charts/comparison-dark.svg">
+  <img alt="Input tokens, output tokens, LLM requests, seconds and checks passed, with Jev routing on and off, for Codex and Claude Code on two chess tasks" src="charts/comparison-light.svg">
+</picture>
 
-| | Routing on | Routing off (baseline) | Difference |
-| --- | ---: | ---: | ---: |
-| Hidden checks passed | 36 / 36 | 36 / 36 | same |
-| LLM requests | 4 | 6 | -33% |
-| Input tokens | 76,678 | 118,709 | -35% |
-| of which cached | 75% | 78% | |
-| Output tokens | 1,313 | 3,231 | -59% |
-| Wall-clock seconds | 35 | 88 | -60% |
-| Jev calls | 4 | 0 | |
-| Jev input tokens | 18,477 | 0 | about $0.0008 |
+Medians of five runs. The percentage is routing on compared with routing off.
 
-With routing on, Jev decided all four requests: three forced the `exec` tool (confidence 0.91,
-0.99 and 0.94) and the last one, after the tests passed, switched tools off so the model would
-just answer (0.98). Each Jev call took 0.3 to 0.9 seconds.
+| | Codex · bugfix | Codex · san | Claude Code · bugfix | Claude Code · san |
+| --- | ---: | ---: | ---: | ---: |
+| Runs solved, on / off | 5/5 · 5/5 | 5/5 · 5/5 | 5/5 · 5/5 | 5/5 · 5/5 |
+| Input tokens | 96k (-7%) | 143k (+2%) | 276k (-19%) | 331k (-27%) |
+| Output tokens | 1,226 (-57%) | 3,663 (0%) | 8,675 (-13%) | 13,497 (-24%) |
+| LLM requests | 5 (0%) | 7 (0%) | 14 (-22%) | 13 (-19%) |
+| Wall-clock seconds | 41 (-39%) | 88 (+8%) | 148 (+6%) | 167 (-26%) |
+| Requests Jev steered | 100% | 95% | 45% | 51% |
+| Jev's own cost, 5 runs | $0.005 | $0.011 | $0.025 | $0.029 |
 
-An earlier pair of runs the same day, made before a token-metering bug in the gateway was fixed,
-recorded no tokens but showed the same shape: 4 requests and 40 seconds with routing on, 6 requests
-and 69 seconds with it off, both solving every check.
+What this says, and what it does not:
 
-Raw data is in [results/](results/): `runs.jsonl`, `summary.md`, and for every run the verifier's
-output, the size of the agent's change, and the gateway's per-request metadata. Agent transcripts
-are not published.
+- **Nothing broke.** All 40 runs passed every hidden check, with or without routing. No run timed
+  out, and no turn was derailed by a forced tool.
+- **Codex, debugging:** routing cut output tokens by more than half and wall-clock time by 39%,
+  in every one of the five runs. Requests and input tokens barely moved. With Codex the gateway
+  forces the tool, so the model skips deliberating about what to do next.
+- **Codex, writing a feature:** no effect on tokens, and 8% slower, which is about what the extra
+  Jev call per request costs. Routing is not free when there is nothing to save.
+- **Claude Code:** the gateway can only hint here (see the gateway's README for why), and Jev was
+  confident enough to hint on about half the requests. Runs with routing still used around 20%
+  fewer requests and 19 to 27% fewer input tokens on both tasks. Time went both ways: 26% faster on
+  one task, 6% slower on the other.
+- **Five runs is still a small sample.** The dots in the chart show the spread: on some measures
+  the two modes overlap. The Codex debugging result is the only one where every routed run beat
+  every baseline run. Everything ran on one machine on one day, with one model per agent.
+- Input tokens are mostly cached (80 to 92%), so a saving in input tokens is worth less money than
+  the same saving in output tokens.
+
+Raw data is in [results/](results/): `runs.jsonl` and `summary.md` per series, and for every run
+the verifier's output, the size of the agent's change, and the gateway's per-request metadata.
+Agent transcripts are not published. The two folders with `chess-bugfix` alone are earlier
+single-run trials made with a personal set of MCP tools installed; they are kept for the record
+and are not comparable with the clean runs above.
+
+Redraw the chart with `npm run chart -- results/2026-09-18-codex results/2026-09-18-claude-fable-5-1`.
 
 ## Run it yourself
 
@@ -53,7 +73,13 @@ npm run selftest                                     # prove the tasks measure w
 npm run bench -- --list                              # tasks and options
 npm run bench -- --agent codex --tasks chess-bugfix  # one run with routing on, one with it off
 npm run bench -- --agent codex --reps 5 --prices 1.25,0.125,10
+npm run bench -- --agent claude --model claude-fable-5-1 --reps 5
 ```
+
+Agents run clean by default: no MCP servers, plugins, skills or personal settings. Add
+`--user-tools` to measure your own setup instead. It changes the picture a lot: one setup here sent
+285 tools and about 200,000 tokens with every Claude Code request, against 6 tools and 7,000 tokens
+clean.
 
 **Real agents spend real quota.** Every run is a full agent session. Start with one task and
 `--reps 1`, look at the numbers, and scale up from there.

@@ -21,12 +21,16 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const TASKS = [...chessTasks];
 
 // How each agent is run unattended, inside the workspace, with edits and test runs allowed.
+// By default an agent runs clean: no MCP servers, plugins, skills or personal settings, only its
+// built-in coding tools. Whatever the person running the benchmark has installed would otherwise
+// change the tool roster (one setup here sent 285 tools and 200k tokens per request), and the
+// results would describe that setup instead of the agent. --user-tools keeps it all.
 const AGENTS = {
   codex: {
     spec: codex,
     command: (origin, workspace, prompt) => ({
       file: "codex",
-      args: [...codex.args(origin), "exec", "--skip-git-repo-check", "--sandbox", "workspace-write", "-C", workspace, prompt],
+      args: [...codex.args(origin), ...(options["user-tools"] ? [] : ["-c", "mcp_servers={}", "-c", "plugins={}"]), "exec", ...(options.model ? ["-m", options.model] : []), "--skip-git-repo-check", "--sandbox", "workspace-write", "-C", workspace, prompt],
     }),
   },
   claude: {
@@ -35,6 +39,8 @@ const AGENTS = {
       file: "claude",
       args: [
         "-p", prompt,
+        ...(options.model ? ["--model", options.model] : []),
+        ...(options["user-tools"] ? [] : ["--strict-mcp-config", "--setting-sources", "", "--disable-slash-commands", "--tools", "Bash,Edit,Write,Read,Glob,Grep"]),
         "--permission-mode", "acceptEdits",
         "--allowedTools", "Read", "Edit", "Write", "Glob", "Grep", "Bash(node:*)", "Bash(npm test:*)", "Bash(npm run:*)", "Bash(ls:*)", "Bash(cat:*)", "Bash(git diff:*)", "Bash(git status:*)",
       ],
@@ -54,6 +60,8 @@ const AGENTS = {
 const { values: options } = parseArgs({
   options: {
     agent: { type: "string", default: "codex" },
+    model: { type: "string" },
+    "user-tools": { type: "boolean", default: false },
     tasks: { type: "string", default: TASKS.map((task) => task.id).join(",") },
     modes: { type: "string", default: "on,off" },
     reps: { type: "string", default: "1" },
@@ -71,6 +79,8 @@ if (options.help || options.list) {
   console.log(`Usage: node run.mjs [options]
 
   --agent codex|claude|fake   which agent does the work (default codex)
+  --model NAME                model for the agent (default: whatever the agent is configured with)
+  --user-tools                keep your own MCP servers, plugins, skills and settings (default: run the agent clean)
   --tasks a,b                 task ids (default: all)
   --modes on,off              routing states to compare (default on,off)
   --reps N                    repetitions of every task in every mode (default 1)
@@ -252,7 +262,7 @@ for (const [number, { task, mode, rep }] of plan.entries()) {
   await run("git", ["add", "-A"], { cwd: workspace, timeoutMs: 30_000 });
   await run("git", ["diff", "--cached", "--stat"], { cwd: workspace, logFile: join(runDir, "diff.stat"), timeoutMs: 30_000 });
 
-  const record = { task: task.id, agent: options.agent, mode, rep, ...result, ...verdict, workspace: options.keep ? workspace : undefined };
+  const record = { task: task.id, agent: options.agent, agentModel: options.model, userTools: options["user-tools"], mode, rep, ...result, ...verdict, workspace: options.keep ? workspace : undefined };
   runs.push(record);
   writeFileSync(join(outDir, "runs.jsonl"), runs.map((entry) => JSON.stringify(entry)).join("\n") + "\n");
   if (!options.keep) rmSync(workspace, { recursive: true, force: true });

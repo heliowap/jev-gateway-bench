@@ -2,3 +2,6 @@ node_modules
 results/*
 !results/2026-*
 .env
+results/**/agent.log
+results/**/gateway.log
+results/**/run.out

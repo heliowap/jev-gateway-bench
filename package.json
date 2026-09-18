@@ -12,7 +12,8 @@
   "scripts": {
     "bench": "node run.mjs",
     "report": "node report.mjs",
-    "selftest": "node selftest.mjs"
+    "selftest": "node selftest.mjs",
+    "chart": "node chart.mjs"
   },
   "dependencies": {
     "jev-gateway": "^0.2.2"
