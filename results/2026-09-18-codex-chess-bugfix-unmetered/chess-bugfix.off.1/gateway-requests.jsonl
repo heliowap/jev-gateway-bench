@@ -1,0 +1,6 @@
+{"time":"2026-09-18T21:29:31.764Z","event":"route","path":"/v1/responses","model":"gpt-6-astra","tools":0,"mode":"passthrough","reason":"routing_disabled","status":200,"durationMs":3872}
+{"time":"2026-09-18T21:29:35.806Z","event":"route","path":"/v1/responses","model":"gpt-6-astra","tools":0,"mode":"passthrough","reason":"routing_disabled","status":200,"durationMs":3886}
+{"time":"2026-09-18T21:29:40.121Z","event":"route","path":"/v1/responses","model":"gpt-6-astra","tools":0,"mode":"passthrough","reason":"routing_disabled","status":200,"durationMs":17220}
+{"time":"2026-09-18T21:29:59.494Z","event":"route","path":"/v1/responses","model":"gpt-6-astra","tools":0,"mode":"passthrough","reason":"routing_disabled","status":200,"durationMs":28649}
+{"time":"2026-09-18T21:30:30.925Z","event":"route","path":"/v1/responses","model":"gpt-6-astra","tools":0,"mode":"passthrough","reason":"routing_disabled","status":200,"durationMs":2753}
+{"time":"2026-09-18T21:30:33.811Z","event":"route","path":"/v1/responses","model":"gpt-6-astra","tools":0,"mode":"passthrough","reason":"routing_disabled","status":200,"durationMs":4301}

@@ -1,0 +1,20 @@
+{
+  "name": "jev-gateway-bench",
+  "version": "0.1.0",
+  "description": "Benchmark for jev-gateway: real coding agents on chess engine tasks, with Jev routing on and off",
+  "license": "MIT",
+  "author": "Vinicius Lana",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.15"
+  },
+  "scripts": {
+    "bench": "node run.mjs",
+    "report": "node report.mjs",
+    "selftest": "node selftest.mjs"
+  },
+  "dependencies": {
+    "jev-gateway": "^0.2.2"
+  }
+}
