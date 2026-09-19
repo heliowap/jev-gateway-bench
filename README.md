@@ -145,6 +145,51 @@ One caveat: this repository is public, so an agent with web access could in prin
 reference. The agents work in a temp directory, are never told it exists, and the tasks give them
 no reason to go looking.
 
+## Could the agents have cheated?
+
+A benchmark of agents has an obvious hole: an agent that finds an earlier run's workspace, a
+scratch file, or this repository's reference solution is not solving the task. Agents run on the
+same machine as the benchmark, Codex's sandbox can read the whole disk, and Claude Code is allowed
+`cat` and `ls`, so nothing stops them from looking. What the benchmark does about it:
+
+- **Every run gets a private directory** holding its workspace and its own temp directory
+  (`TMPDIR`), which is deleted when the run ends, also when the benchmark is interrupted. Anything a
+  dead benchmark left behind is removed before the next one starts.
+- **Every run is audited.** Each agent keeps a record of the commands and tool calls it made. The
+  runner reads it back and stores, in `runs.jsonl` under `isolation`, every path outside the run's
+  directory and whether the run created it or found it. A run that read something it did not create
+  is flagged on the console.
+- Agents run without web tools or network by default, so the public copy of the reference is out of
+  reach.
+- **The agents' own harnesses are told to keep nothing.** Codex runs with `--ephemeral` and Claude
+  Code with `--no-session-persistence`, so no session is saved that a later run could resume or be
+  reminded of, and neither loads personal settings, plugins or skills. The audit reads the agent's
+  output instead of files in its home directory.
+
+One gap remains: an agent told to use a private temp directory may still write `/tmp/check.mjs` by
+name, as Claude Code likes to. The audit records it, and a later run that read such a file without
+creating it would be flagged as having found it.
+
+The 40 published runs were made before this existed and were audited afterwards from the same
+records, 385 Claude Code tool calls and 120 Codex commands:
+
+- No run opened the reference solution, another run's workspace, or a file another run had left.
+- Nine Claude Code runs wrote test scripts of their own into the shared `/tmp`, such as
+  `/tmp/check.mjs`. Each run created its copy before using it, so nothing was carried over, but it
+  is the channel the private temp directory now closes.
+- Seven Codex runs looked for an `AGENTS.md` next to their workspace (there was none), and one
+  searched the home directory for files of that name. That is Codex looking for instructions, not
+  for answers, and that run was the slowest of its group, not the fastest.
+- Neither harness carried anything over. Codex's `memories` feature was off and its store empty.
+  Claude Code keeps memory and transcripts per working directory, every run had a directory of its
+  own, and the 24 memory folders it created for them are all empty. Both saved session transcripts,
+  which nothing reads unless a session is resumed, and no run resumed one.
+
+What no audit can rule out is what the models already know: chess rules, perft numbers and
+algebraic notation are all over their training data. That lifts both columns equally. It is a
+reason not to read these tasks as a measure of how good the agents are, only of what routing
+changes.
+
 ## Testing the benchmark without an agent
 
 `--agent fake` replaces the agent with a script that sends a few requests through the gateway and

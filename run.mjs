@@ -7,13 +7,14 @@
 // meters belong to that run and nothing else. When the agent stops, a hidden verifier scores what
 // it left behind: cheaper only counts if the work is still right.
 import { spawn } from "node:child_process";
-import { createWriteStream, mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { createWriteStream, mkdirSync, mkdtempSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
 import { claude, codex } from "jev-gateway/bin/clients.mjs";
 import { GATEWAY_ARGS, ROOT, loadEnv } from "jev-gateway/bin/launcher.mjs";
+import { audit } from "./audit.mjs";
 import { summarize } from "./report.mjs";
 import { tasks as chessTasks } from "./tasks/chess/tasks.mjs";
 
@@ -30,7 +31,7 @@ const AGENTS = {
     spec: codex,
     command: (origin, workspace, prompt) => ({
       file: "codex",
-      args: [...codex.args(origin), ...(options["user-tools"] ? [] : ["-c", "mcp_servers={}", "-c", "plugins={}"]), "exec", ...(options.model ? ["-m", options.model] : []), "--skip-git-repo-check", "--sandbox", "workspace-write", "-C", workspace, prompt],
+      args: [...codex.args(origin), ...(options["user-tools"] ? [] : ["-c", "mcp_servers={}", "-c", "plugins={}"]), "exec", "--ephemeral", ...(options.model ? ["-m", options.model] : []), "--skip-git-repo-check", "--sandbox", "workspace-write", "-C", workspace, prompt],
     }),
   },
   claude: {
@@ -39,6 +40,8 @@ const AGENTS = {
       file: "claude",
       args: [
         "-p", prompt,
+        // Every tool call goes to the log (the audit reads it), and nothing is saved for a later session.
+        "--output-format", "stream-json", "--verbose", "--no-session-persistence",
         ...(options.model ? ["--model", options.model] : []),
         ...(options["user-tools"] ? [] : ["--strict-mcp-config", "--setting-sources", "", "--disable-slash-commands", "--tools", "Bash,Edit,Write,Read,Glob,Grep"]),
         "--permission-mode", "acceptEdits",
@@ -225,6 +228,28 @@ async function verify(task, workspace, logFile) {
   return { passed, total, score: total ? passed / total : 0, solved: total > 0 && passed === total, timedOut, failed: checks.filter((entry) => !entry.ok).map((entry) => entry.name) };
 }
 
+// Anything an earlier, interrupted benchmark left in the temp directory is a finished or
+// half-finished solution lying where the next agent could find it.
+// Sandboxes carry their runner's pid, so a second benchmark running right now keeps its own.
+const alive = (pid) => {
+  try {
+    return process.kill(pid, 0);
+  } catch {
+    return false;
+  }
+};
+for (const name of readdirSync(tmpdir())) {
+  const owner = Number(/^jev-bench-(\d+)-/.exec(name)?.[1]);
+  if (name.startsWith("jev-bench-") && !(owner && alive(owner))) rmSync(join(tmpdir(), name), { recursive: true, force: true });
+}
+let sandbox;
+for (const signal of ["SIGINT", "SIGTERM"]) {
+  process.on(signal, () => {
+    if (sandbox && !options.keep) rmSync(sandbox, { recursive: true, force: true });
+    process.exit(130);
+  });
+}
+
 mkdirSync(outDir, { recursive: true });
 const runs = [];
 const plan = [];
@@ -239,7 +264,13 @@ for (const [number, { task, mode, rep }] of plan.entries()) {
   const label = `${task.id}.${mode}.${rep}`;
   const runDir = join(outDir, label);
   mkdirSync(runDir, { recursive: true });
-  const workspace = mkdtempSync(join(tmpdir(), `jev-bench-${task.id}-`));
+  // A private directory per run: the workspace, and next to it the run's own temp directory, so
+  // the scratch files agents like to write never land where another run could read them.
+  sandbox = mkdtempSync(join(tmpdir(), `jev-bench-${process.pid}-`));
+  const workspace = join(sandbox, "workspace");
+  const scratch = join(sandbox, "tmp");
+  mkdirSync(workspace);
+  mkdirSync(scratch);
   task.setup(workspace);
   // A repository of its own: agents expect one, and the diff shows what this run changed.
   await run("git", ["-c", "init.defaultBranch=main", "init", "-q"], { cwd: workspace, timeoutMs: 30_000 });
@@ -252,7 +283,7 @@ for (const [number, { task, mode, rep }] of plan.entries()) {
   try {
     const { file, args, env } = agent.command(origin, workspace, task.prompt, task);
     const timeoutMs = Number(options["timeout-min"] ?? task.timeoutMinutes) * 60_000;
-    const outcome = await run(file, args, { cwd: workspace, env, logFile: join(runDir, "agent.log"), timeoutMs });
+    const outcome = await run(file, args, { cwd: workspace, env: { ...env, TMPDIR: scratch }, logFile: join(runDir, "agent.log"), timeoutMs });
     const usage = await meter();
     result = { ...outcome, ...usage };
   } finally {
@@ -262,13 +293,16 @@ for (const [number, { task, mode, rep }] of plan.entries()) {
   await run("git", ["add", "-A"], { cwd: workspace, timeoutMs: 30_000 });
   await run("git", ["diff", "--cached", "--stat"], { cwd: workspace, logFile: join(runDir, "diff.stat"), timeoutMs: 30_000 });
 
-  const record = { task: task.id, agent: options.agent, agentModel: options.model, userTools: options["user-tools"], mode, rep, ...result, ...verdict, workspace: options.keep ? workspace : undefined };
+  const isolation = audit({ agent: options.agent, agentLog: join(runDir, "agent.log"), workspace, sandbox });
+  const record = { task: task.id, agent: options.agent, agentModel: options.model, userTools: options["user-tools"], mode, rep, ...result, ...verdict, isolation, workspace: options.keep ? workspace : undefined };
   runs.push(record);
   writeFileSync(join(outDir, "runs.jsonl"), runs.map((entry) => JSON.stringify(entry)).join("\n") + "\n");
-  if (!options.keep) rmSync(workspace, { recursive: true, force: true });
+  if (!options.keep) rmSync(sandbox, { recursive: true, force: true });
+  sandbox = undefined;
   console.log(
     `${verdict.passed}/${verdict.total} checks, ${record.requests} requests, ${record.input.toLocaleString("en-US")} in / ${record.output.toLocaleString("en-US")} out, ${Math.round(record.seconds)} s` +
-      (record.timedOut ? " (agent timed out)" : ""),
+      (record.timedOut ? " (agent timed out)" : "") +
+      (isolation.foreignReads?.length ? ` (LOOKED OUTSIDE ITS SANDBOX: ${isolation.foreignReads.join(", ")})` : ""),
   );
 }
 
