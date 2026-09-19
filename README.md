@@ -9,46 +9,65 @@ sees.
 
 ## Results
 
-Two tasks, two agents, five runs per mode, 40 agent sessions in all (2026-09-18). Codex 0.154 with
-`gpt-6-astra` on a ChatGPT subscription, Claude Code 2.1 with `claude-fable-5-1` on a claude.ai
-subscription, real Jev (`jev-latest`) with the gateway's default thresholds. Both agents ran clean:
-no MCP servers, plugins, skills or personal settings, only their built-in coding tools.
+Six models, two tasks, five runs per mode: 120 agent sessions (2026-09-18 and 19). GPT models ran
+in Codex 0.154 on a ChatGPT subscription, Claude models in Claude Code 2.1 on a claude.ai
+subscription, with real Jev (`jev-latest`) and the gateway's default thresholds. Every agent ran
+clean: no MCP servers, plugins, skills or personal settings, only its built-in coding tools.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="charts/comparison-dark.svg">
-  <img alt="Input tokens, output tokens, LLM requests, seconds and checks passed, with Jev routing on and off, for Codex and Claude Code on two chess tasks" src="charts/comparison-light.svg">
+  <img alt="Input tokens, output tokens, LLM requests, seconds and checks passed, with Jev routing on and off, for six models on two chess tasks" src="charts/comparison-light.svg">
 </picture>
 
-Medians of five runs. The percentage is routing on compared with routing off.
+Medians of the runs with routing on. The percentage compares them with the same model's runs
+without routing.
 
-| | Codex · bugfix | Codex · san | Claude Code · bugfix | Claude Code · san |
-| --- | ---: | ---: | ---: | ---: |
-| Runs solved, on / off | 5/5 · 5/5 | 5/5 · 5/5 | 5/5 · 5/5 | 5/5 · 5/5 |
-| Input tokens | 96k (-7%) | 143k (+2%) | 276k (-19%) | 331k (-27%) |
-| Output tokens | 1,226 (-57%) | 3,663 (0%) | 8,675 (-13%) | 13,497 (-24%) |
-| LLM requests | 5 (0%) | 7 (0%) | 14 (-22%) | 13 (-19%) |
-| Wall-clock seconds | 41 (-39%) | 88 (+8%) | 148 (+6%) | 167 (-26%) |
-| Requests Jev steered | 100% | 95% | 45% | 51% |
-| Jev's own cost, 5 runs | $0.005 | $0.011 | $0.025 | $0.029 |
+### chess-bugfix: find and fix five injected bugs
+
+| Model | Solved, on / off | Output tokens | Input tokens | LLM requests | Seconds | Jev steered |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| GPT-6 Astra | 5/5 · 5/5 | 1,226 (-57%) | 96k (-7%) | 5 (0%) | 41 (-39%) | 100% |
+| GPT-5.6 Sol | 5/5 · 5/5 | 3,211 (-57%) | 202k (-40%) | 9 (-36%) | 78 (-36%) | 93% |
+| GPT-5.6 Luna | 1/4 · 0/5 | 10,519 (-12%) | 506k (-10%) | 19.5 (-15%) | 200 (+10%) | 86% |
+| Fable 5.1 | 5/5 · 5/5 | 8,675 (-13%) | 276k (-19%) | 14 (-22%) | 148 (+6%) | 45% |
+| Opus 5 | 5/5 · 5/5 | 16,693 (-7%) | 406k (-22%) | 18 (-14%) | 218 (+2%) | 38% |
+| Sonnet 5 | 5/5 · 5/5 | 16,623 (-41%) | 616k (-48%) | 26 (-26%) | 243 (-25%) | 34% |
+
+### chess-san: add algebraic notation to a working engine
+
+| Model | Solved, on / off | Output tokens | Input tokens | LLM requests | Seconds | Jev steered |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| GPT-6 Astra | 5/5 · 5/5 | 3,663 (0%) | 143k (+2%) | 7 (0%) | 88 (+8%) | 95% |
+| GPT-5.6 Sol | 5/5 · 5/5 | 5,096 (-9%) | 147k (-39%) | 7 (-36%) | 78 (-16%) | 86% |
+| GPT-5.6 Luna | 3/5 · 5/5 | 6,809 (-14%) | 315k (-51%) | 14 (-42%) | 121 (-14%) | 76% |
+| Fable 5.1 | 5/5 · 5/5 | 13,497 (-24%) | 331k (-27%) | 13 (-19%) | 167 (-26%) | 51% |
+| Opus 5 | 5/5 · 5/5 | 20,152 (+22%) | 676k (+61%) | 25 (+47%) | 390 (+83%) | 44% |
+| Sonnet 5 | 5/5 · 5/5 | 23,487 (+9%) | 991k (+16%) | 32 (+3%) | 327 (+37%) | 42% |
 
 What this says, and what it does not:
 
-- **Nothing broke.** All 40 runs passed every hidden check, with or without routing. No run timed
-  out, and no turn was derailed by a forced tool.
-- **Codex, debugging:** routing cut output tokens by more than half and wall-clock time by 39%,
-  in every one of the five runs. Requests and input tokens barely moved. With Codex the gateway
-  forces the tool, so the model skips deliberating about what to do next.
-- **Codex, writing a feature:** no effect on tokens, and 8% slower, which is about what the extra
-  Jev call per request costs. Routing is not free when there is nothing to save.
-- **Claude Code:** the gateway can only hint here (see the gateway's README for why), and Jev was
-  confident enough to hint on about half the requests. Runs with routing still used around 20%
-  fewer requests and 19 to 27% fewer input tokens on both tasks. Time went both ways: 26% faster on
-  one task, 6% slower on the other.
-- **Five runs is still a small sample.** The dots in the chart show the spread: on some measures
-  the two modes overlap. The Codex debugging result is the only one where every routed run beat
-  every baseline run. Everything ran on one machine on one day, with one model per agent.
-- Input tokens are mostly cached (80 to 92%), so a saving in input tokens is worth less money than
-  the same saving in output tokens.
+- **Debugging is where routing pays.** On `chess-bugfix` every model used fewer tokens with
+  routing, from a little (Opus 5, Luna) to a lot (GPT-6 Astra and GPT-5.6 Sol cut output tokens by
+  57%, Sonnet 5 cut input tokens by 48%). Nothing got less correct.
+- **Writing a feature is a coin toss.** On `chess-san` routing helped GPT-5.6 Sol, GPT-5.6 Luna and
+  Fable 5.1, did nothing for GPT-6 Astra, and made Opus 5 and Sonnet 5 clearly worse: Opus 5 needed
+  47% more requests and 83% more time. The gateway only hints with Claude models, so a hint that
+  does not fit costs a detour instead of being ignored for free.
+- **Routing can cost correctness.** GPT-5.6 Luna solved `chess-san` five times out of five on its
+  own and three out of five with routing, failing the same check both times. It used half the
+  input tokens doing so. Cheaper and wrong is not a saving. It is one model and two runs, but it is
+  the failure this benchmark exists to catch.
+- **A weak model stays weak.** Luna could not reliably fix `chess-bugfix` either way (1 of 4 with
+  routing, 0 of 5 without): it kept missing the castling bug. Routing does not add ability.
+- **Codex takes more steering than Claude Code.** Jev decided 76 to 100% of Codex requests, where
+  the gateway forces the tool, and 34 to 51% of Claude Code requests, where it can only hint.
+- **One run was thrown out.** A GPT-5.6 Luna run, stuck on a bug, searched the disk, found the
+  workspace of a Claude Code run that was going on at the same time, and compared notes. The audit
+  below caught it and it is excluded from every number here. See "Could the agents have cheated?".
+- **Five runs is a small sample.** The dots in the chart show how much runs vary; several of the
+  differences above sit inside that spread. Everything ran on one machine over two days. Input
+  tokens are mostly cached (80 to 96%), so an input saving is worth less money than the same saving
+  in output tokens. Jev itself cost between half a cent and ten cents per five runs.
 
 Raw data is in [results/](results/): `runs.jsonl` and `summary.md` per series, and for every run
 the verifier's output, the size of the agent's change, and the gateway's per-request metadata.
@@ -56,7 +75,8 @@ Agent transcripts are not published. The two folders with `chess-bugfix` alone a
 single-run trials made with a personal set of MCP tools installed; they are kept for the record
 and are not comparable with the clean runs above.
 
-Redraw the chart with `npm run chart -- results/2026-09-18-codex results/2026-09-18-claude-fable-5-1`.
+Redraw the chart with `npm run chart -- results/2026-09-18-c*-*`, and re-run the audit over
+finished results with `node audit.mjs <results dir>`.
 
 ## Run it yourself
 
@@ -166,24 +186,36 @@ same machine as the benchmark, Codex's sandbox can read the whole disk, and Clau
   reminded of, and neither loads personal settings, plugins or skills. The audit reads the agent's
   output instead of files in its home directory.
 
-One gap remains: an agent told to use a private temp directory may still write `/tmp/check.mjs` by
-name, as Claude Code likes to. The audit records it, and a later run that read such a file without
-creating it would be flagged as having found it.
+Two gaps remain. An agent told to use a private temp directory may still write `/tmp/check.mjs` by
+name, as Claude Code likes to; the runner cannot stop that, only notice when another run reads it.
+And agents can read the whole disk: only a container or a separate user account would change that.
+Until then the protection is detection, not prevention.
 
-The 40 published runs were made before this existed and were audited afterwards from the same
-records, 385 Claude Code tool calls and 120 Codex commands:
+- **One series at a time.** The runner refuses to start while another benchmark is running,
+  because a second series puts a live workspace for the same task within reach.
+- **A run that read anything it did not create is excluded** from every statistic and named in the
+  summary. Looking for `AGENTS.md` instruction files, which Codex does on its own, does not count.
 
-- No run opened the reference solution, another run's workspace, or a file another run had left.
-- Nine Claude Code runs wrote test scripts of their own into the shared `/tmp`, such as
-  `/tmp/check.mjs`. Each run created its copy before using it, so nothing was carried over, but it
-  is the channel the private temp directory now closes.
-- Seven Codex runs looked for an `AGENTS.md` next to their workspace (there was none), and one
-  searched the home directory for files of that name. That is Codex looking for instructions, not
-  for answers, and that run was the slowest of its group, not the fastest.
+That last rule comes from experience. Of the 120 published runs, 119 kept to themselves and one
+did not. GPT-5.6 Luna, unable to get one perft number right, ran
+`rg -n "kiwipete|2039|perft" /tmp /home/…`, found a test script that a Claude Code run had written
+to `/tmp` and that run's workspace (two series were running side by side, which the runner no
+longer allows), diffed the other agent's `chess.js` against its own, and then passed every check.
+It is `chess-bugfix.on.3` in the Luna series, marked `contaminated` in `runs.jsonl`.
+
+The rest of the audit, over 2,000 commands and tool calls:
+
+- No other run opened another run's workspace or files, and no run opened the reference solution.
+- Many Claude Code runs wrote test scripts of their own into the shared `/tmp`, such as
+  `/tmp/check.mjs`, ignoring the private temp directory they were given. Each created its copy
+  before using it. These are the files the Luna run found.
+- Codex runs looked for an `AGENTS.md` next to their workspace, and one searched the home directory
+  for files of that name. That is Codex looking for instructions, not for answers.
 - Neither harness carried anything over. Codex's `memories` feature was off and its store empty.
   Claude Code keeps memory and transcripts per working directory, every run had a directory of its
-  own, and the 24 memory folders it created for them are all empty. Both saved session transcripts,
-  which nothing reads unless a session is resumed, and no run resumed one.
+  own, and the memory folders it created for them are all empty. The first 40 runs saved session
+  transcripts, which nothing reads unless a session is resumed, and no run resumed one. The Fable
+  5.1 series was audited from those transcripts, the others from the agents' own output.
 
 What no audit can rule out is what the models already know: chess rules, perft numbers and
 algebraic notation are all over their training data. That lifts both columns equally. It is a

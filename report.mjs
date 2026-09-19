@@ -19,7 +19,10 @@ const change = (withJev, without) =>
 const cost = (run, prices) =>
   ((run.input - run.cached) * prices.input + run.cached * prices.cached + run.output * prices.output) / 1e6 + (run.jevInput * 0.042) / 1e6;
 
-export function summarize(runs, prices) {
+export function summarize(allRuns, prices) {
+  // A contaminated run read something it did not create (see audit.mjs). Its numbers describe a
+  // different task, so it is reported and left out of every statistic.
+  const runs = allRuns.filter((run) => !run.isolation?.contaminated);
   const lines = ["# Benchmark summary", ""];
   const tasks = [...new Set(runs.map((run) => run.task))];
   const metrics = [
@@ -57,6 +60,10 @@ export function summarize(runs, prices) {
       lines.push(`| ${label} | ${format(a)}${comparable ? change(a, b) : ""} | ${format(b)} |`);
     }
     lines.push("");
+  }
+  const excluded = allRuns.filter((run) => run.isolation?.contaminated);
+  if (excluded.length) {
+    lines.push(`Excluded as contaminated (the agent read files outside its sandbox that it had not created): ${excluded.map((run) => `${run.task}.${run.mode}.${run.rep}`).join(", ")}.`, "");
   }
   const smallest = Math.min(...tasks.flatMap((task) => ["on", "off"].map((mode) => runs.filter((run) => run.task === task && run.mode === mode).length)));
   lines.push(

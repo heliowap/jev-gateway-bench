@@ -1,0 +1,3 @@
+ src/chess.js     |  75 ++++++++++++++++++-
+ test/san.test.js | 218 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 290 insertions(+), 3 deletions(-)

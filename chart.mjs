@@ -36,12 +36,20 @@ function niceCeiling(value) {
   return [1, 2, 2.5, 5, 10].map((step) => step * magnitude).find((step) => step >= value);
 }
 
-const AGENT_NAMES = { codex: "Codex", claude: "Claude Code" };
-const groupLabel = (run) => `${AGENT_NAMES[run.agent] ?? run.agent} · ${run.task.replace(/^chess-/, "")}`;
+// A model names its agent (GPT models ran in Codex, Claude models in Claude Code), so rows are
+// labelled by model, and sorted by task first: the comparison of interest is between models doing
+// the same work.
+const MODEL_NAMES = {
+  "gpt-6-astra": "GPT-6 Astra", "gpt-5.6-sol": "GPT-5.6 Sol", "gpt-5.6-luna": "GPT-5.6 Luna", "gpt-5.6-terra": "GPT-5.6 Terra",
+  "claude-fable-5-1": "Fable 5.1", "claude-opus-5": "Opus 5", "claude-sonnet-5": "Sonnet 5",
+};
+const modelOf = (run) => run.agentModel ?? run.models?.find((model) => !model.includes("review")) ?? run.agent;
+const groupLabel = (run) => `${MODEL_NAMES[modelOf(run)] ?? modelOf(run)} · ${run.task.replace(/^chess-/, "")}`;
 
 function draw(runs, theme) {
   const c = THEMES[theme];
-  const groups = [...new Set(runs.map(groupLabel))];
+  const taskOrder = [...new Set(runs.map((run) => run.task))];
+  const groups = [...new Set([...runs].sort((a, b) => taskOrder.indexOf(a.task) - taskOrder.indexOf(b.task)).map(groupLabel))];
   const W = 1200;
   const PAD = 32;
   const COLS = 2;
@@ -52,7 +60,7 @@ function draw(runs, theme) {
   const ROW_H = 16;
   const GROUP_GAP = 14;
   const plotW = panelW - LABEL_W - VALUE_W;
-  const panelH = 34 + groups.length * (2 * ROW_H + GROUP_GAP) + 22;
+  const panelH = Math.max(34 + groups.length * (2 * ROW_H + GROUP_GAP) + 22, 60 + groups.length * 38);
   const HEADER = 124;
   const rows = Math.ceil((PANELS.length + 1) / COLS);
   const H = HEADER + rows * (panelH + 28) + 40;
@@ -62,11 +70,10 @@ function draw(runs, theme) {
 
   out.push(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" font-family="system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" role="img" aria-label="Benchmark results with Jev routing on and off">`);
   out.push(`<rect width="${W}" height="${H}" fill="${c.surface}"/>`);
-  text(PAD, 40, "Same task, same agent: Jev routing on vs. off", { size: 20, fill: c.ink, weight: 650 });
+  text(PAD, 40, "Same task, same model: Jev routing on vs. off", { size: 20, fill: c.ink, weight: 650 });
   const perCell = Math.min(...groups.flatMap((group) => MODES.map(([mode]) => runs.filter((run) => groupLabel(run) === group && run.mode === mode).length)));
-  const models = [...new Set(runs.map((run) => `${AGENT_NAMES[run.agent] ?? run.agent}: ${run.agentModel ?? run.models?.find((model) => !model.includes("review")) ?? "default model"}`))].join(", ");
-  text(PAD, 62, `Bars are medians, dots are the individual runs (${perCell} per mode), drawn relative to each pair's baseline median.`, { size: 13 });
-  text(PAD, 80, `Lower is better, except for checks passed. ${models}.`, { size: 13 });
+  text(PAD, 62, `Bars are medians, dots are the individual runs (${perCell === 5 ? "5" : `${perCell} to 5`} per mode), drawn relative to each pair's baseline median.`, { size: 13 });
+  text(PAD, 80, "Lower is better, except for checks passed. GPT models ran in Codex, Claude models in Claude Code, both without MCP servers or plugins.", { size: 13 });
   // Legend: always present for two series, in ink; the swatch carries the identity.
   let legendX = PAD;
   for (const [mode, label] of MODES) {
@@ -81,7 +88,9 @@ function draw(runs, theme) {
     const absolute = title.startsWith("Hidden");
     const baseline = (group) => median(runs.filter((run) => groupLabel(run) === group && run.mode === "off").map(measure)) || 1;
     const relative = (run) => (absolute ? measure(run) : (100 * measure(run)) / baseline(groupLabel(run)));
-    const max = absolute ? 100 : Math.max(150, niceCeiling(Math.max(...runs.map(relative))));
+    // One runaway run must not squash every other row: the axis stops at 250% of the baseline,
+    // and anything beyond is drawn hollow at the edge with its real value written next to it.
+    const max = absolute ? 100 : Math.min(250, Math.max(150, niceCeiling(Math.max(...runs.map(relative)))));
     const scale = (value) => x0 + LABEL_W + (plotW * value) / max;
     text(x0, y0 + 14, title, { size: 14, fill: c.ink, weight: 600 });
     const top = y0 + 34;
@@ -106,7 +115,11 @@ function draw(runs, theme) {
         const barEnd = Math.max(scale(median(cell)), scale(0) + 4);
         // Rounded at the data end only; the other end sits square on the baseline.
         out.push(`<path d="M${scale(0)},${cy - 4} H${barEnd - 4} a4,4 0 0 1 0,8 H${scale(0)} Z" fill="${c[mode]}" opacity="0.55"/>`);
-        for (const value of cell) out.push(`<circle cx="${scale(value)}" cy="${cy}" r="4" fill="${c[mode]}" stroke="${c.surface}" stroke-width="2"/>`);
+        members.forEach((run, i) => {
+          if (cell[i] <= max) return out.push(`<circle cx="${scale(cell[i])}" cy="${cy}" r="4" fill="${c[mode]}" stroke="${c.surface}" stroke-width="2"/>`);
+          out.push(`<circle cx="${scale(max)}" cy="${cy}" r="3.5" fill="${c.surface}" stroke="${c[mode]}" stroke-width="2"/>`);
+          text(scale(max) - 8, cy + 4, `${format(measure(run))} →`, { size: 10, fill: c.ink2, anchor: "end" });
+        });
       });
       // Direct labels, in ink: both medians, and what routing changed.
       MODES.forEach(([mode], modeIndex) => {
@@ -123,15 +136,14 @@ function draw(runs, theme) {
   const y0 = HEADER + Math.floor(PANELS.length / COLS) * (panelH + 28);
   text(x0, y0 + 14, "Solved runs and what Jev itself cost", { size: 14, fill: c.ink, weight: 600 });
   groups.forEach((group, index) => {
-    const y = y0 + 44 + index * 54;
+    const y = y0 + 44 + index * 38;
     const cell = (mode) => runs.filter((run) => groupLabel(run) === group && run.mode === mode);
     const solved = (mode) => `${cell(mode).filter((run) => run.solved).length}/${cell(mode).length}`;
     const jevTokens = cell("on").reduce((total, run) => total + run.jevInput, 0);
     const steered = cell("on").reduce((total, run) => total + run.requests - (run.modes.passthrough ?? 0), 0);
     const requests = cell("on").reduce((total, run) => total + run.requests, 0);
     text(x0, y, group, { size: 12, fill: c.ink, weight: 600 });
-    text(x0, y + 17, `Solved ${solved("on")} with routing, ${solved("off")} without.`, { size: 12 });
-    text(x0, y + 33, `Jev steered ${steered} of ${requests} requests, reading ${Math.round(jevTokens / 1e3)}k tokens ($${((jevTokens * 0.042) / 1e6).toFixed(4)}).`, { size: 12 });
+    text(x0, y + 16, `Solved ${solved("on")} with routing, ${solved("off")} without. Jev steered ${steered} of ${requests} requests for $${((jevTokens * 0.042) / 1e6).toFixed(3)}.`, { size: 12 });
   });
   out.push("</svg>");
   return out.join("\n");
@@ -142,7 +154,10 @@ const outFlag = args.indexOf("--out");
 const outDir = outFlag >= 0 ? args[outFlag + 1] : "charts";
 const dirs = args.filter((arg, index) => !arg.startsWith("--") && (outFlag < 0 || index !== outFlag + 1));
 if (!dirs.length) throw new Error("usage: node chart.mjs <results dir> [<results dir> …] [--out charts]");
-const runs = dirs.flatMap((dir) => readFileSync(join(dir, "runs.jsonl"), "utf8").trim().split("\n").map((line) => JSON.parse(line)));
+// Contaminated runs (see audit.mjs) measured a different task and are left out.
+const runs = dirs
+  .flatMap((dir) => readFileSync(join(dir, "runs.jsonl"), "utf8").trim().split("\n").map((line) => JSON.parse(line)))
+  .filter((run) => !run.isolation?.contaminated);
 mkdirSync(outDir, { recursive: true });
 for (const theme of Object.keys(THEMES)) {
   writeFileSync(join(outDir, `comparison-${theme}.svg`), draw(runs, theme));

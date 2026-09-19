@@ -7,7 +7,7 @@
 // meters belong to that run and nothing else. When the agent stops, a hidden verifier scores what
 // it left behind: cheaper only counts if the work is still right.
 import { spawn } from "node:child_process";
-import { createWriteStream, mkdirSync, mkdtempSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { createWriteStream, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -242,6 +242,16 @@ for (const name of readdirSync(tmpdir())) {
   const owner = Number(/^jev-bench-(\d+)-/.exec(name)?.[1]);
   if (name.startsWith("jev-bench-") && !(owner && alive(owner))) rmSync(join(tmpdir(), name), { recursive: true, force: true });
 }
+// One benchmark at a time. Agents can read the whole disk, so a second series running alongside
+// puts a live workspace for the same task within reach, and an agent that gets stuck goes looking.
+const lock = join(tmpdir(), "jev-bench.lock");
+const holder = existsSync(lock) ? Number(readFileSync(lock, "utf8")) : undefined;
+if (holder && holder !== process.pid && alive(holder)) {
+  throw new Error(`another benchmark is running (pid ${holder}). Series must not overlap: agents can read each other's workspaces.`);
+}
+writeFileSync(lock, String(process.pid));
+process.on("exit", () => rmSync(lock, { force: true }));
+
 let sandbox;
 for (const signal of ["SIGINT", "SIGTERM"]) {
   process.on(signal, () => {
@@ -302,7 +312,7 @@ for (const [number, { task, mode, rep }] of plan.entries()) {
   console.log(
     `${verdict.passed}/${verdict.total} checks, ${record.requests} requests, ${record.input.toLocaleString("en-US")} in / ${record.output.toLocaleString("en-US")} out, ${Math.round(record.seconds)} s` +
       (record.timedOut ? " (agent timed out)" : "") +
-      (isolation.foreignReads?.length ? ` (LOOKED OUTSIDE ITS SANDBOX: ${isolation.foreignReads.join(", ")})` : ""),
+      (isolation.contaminated ? ` (CONTAMINATED, excluded: read ${isolation.foreignReads.join(", ")})` : ""),
   );
 }
 
