@@ -16,6 +16,6 @@
     "chart": "node chart.mjs"
   },
   "dependencies": {
-    "jev-gateway": "^0.3.1"
+    "jev-gateway": "^0.4.3"
   }
 }

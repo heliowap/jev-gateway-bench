@@ -27,6 +27,24 @@ const TASKS = [...chessTasks];
 // change the tool roster (one setup here sent 285 tools and 200k tokens per request), and the
 // results would describe that setup instead of the agent. --user-tools keeps it all.
 const AGENTS = {
+  opencode: {
+    spec: { upstream: () => process.env.BENCH_OPENCODE_UPSTREAM ?? "https://opencode.ai/zen/v1" },
+    command: (origin, workspace, prompt) => ({
+      file: "opencode",
+      args: ["run", "--pure", "--dir", workspace, "--format", "json", "--model", options.model, prompt],
+      env: {
+        OPENCODE_CONFIG_CONTENT: JSON.stringify({
+          model: options.model,
+          small_model: options.model,
+          provider: {
+            [options.model.split("/")[0]]: { options: { baseURL: `${origin}/v1` } },
+          },
+        }),
+        OPENCODE_EXPERIMENTAL_NATIVE_LLM: "false",
+        OPENCODE_EXPERIMENTAL_CODE_MODE: "false",
+      },
+    }),
+  },
   codex: {
     spec: codex,
     command: (origin, workspace, prompt) => ({
@@ -81,8 +99,8 @@ const { values: options } = parseArgs({
 if (options.help || options.list) {
   console.log(`Usage: node run.mjs [options]
 
-  --agent codex|claude|fake   which agent does the work (default codex)
-  --model NAME                model for the agent (default: whatever the agent is configured with)
+  --agent codex|claude|opencode|fake   which agent does the work (default codex)
+  --model NAME                model for the agent (required for opencode)
   --user-tools                keep your own MCP servers, plugins, skills and settings (default: run the agent clean)
   --tasks a,b                 task ids (default: all)
   --modes on,off              routing states to compare (default on,off)
@@ -102,6 +120,7 @@ Real agents spend real quota: every run is a full agent session. Start with one 
 
 const agent = AGENTS[options.agent];
 if (!agent) throw new Error(`Unknown agent "${options.agent}". Use one of: ${Object.keys(AGENTS).join(", ")}`);
+if (options.agent === "opencode" && !options.model?.includes("/")) throw new Error("--agent opencode needs --model provider/model");
 const chosen = options.tasks.split(",").map((id) => {
   const task = TASKS.find((candidate) => candidate.id === id.trim());
   if (!task) throw new Error(`Unknown task "${id}". Run with --list to see them.`);
@@ -304,6 +323,16 @@ for (const [number, { task, mode, rep }] of plan.entries()) {
   await run("git", ["diff", "--cached", "--stat"], { cwd: workspace, logFile: join(runDir, "diff.stat"), timeoutMs: 30_000 });
 
   const isolation = audit({ agent: options.agent, agentLog: join(runDir, "agent.log"), workspace, sandbox });
+  // Keep only request metadata. Agent transcripts and raw gateway logs stay ignored by git.
+  const requests = readFileSync(join(runDir, "gateway.log"), "utf8").split("\n").flatMap((line) => {
+    try {
+      const entry = JSON.parse(line);
+      return entry.event === "route" ? [entry] : [];
+    } catch {
+      return [];
+    }
+  });
+  writeFileSync(join(runDir, "gateway-requests.jsonl"), requests.map((entry) => JSON.stringify(entry)).join("\n") + "\n");
   const record = { task: task.id, agent: options.agent, agentModel: options.model, userTools: options["user-tools"], mode, rep, ...result, ...verdict, isolation, workspace: options.keep ? workspace : undefined };
   runs.push(record);
   writeFileSync(join(outDir, "runs.jsonl"), runs.map((entry) => JSON.stringify(entry)).join("\n") + "\n");
