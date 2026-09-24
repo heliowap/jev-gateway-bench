@@ -106,9 +106,10 @@ finished results with `node audit.mjs <results dir>`.
 
 ## Run it yourself
 
-You need Node.js 22.15 or newer, a [TypeSafe API key](https://docs.typesafe.ai/introduction) in
-`~/.jev-gateway/.env` (see the [gateway's quick start](https://github.com/vinilana/jev-gateway#quick-start)),
-and Codex, Claude Code and/or OpenCode installed and logged in.
+You need Node.js 22.15 or newer, a Jev key for your chosen provider (TypeSafe, OpenRouter or
+Vercel AI Gateway) in `~/.jev-gateway/.env` (see the
+[gateway's quick start](https://github.com/vinilana/jev-gateway#quick-start)), and Codex, Claude
+Code and/or OpenCode installed and logged in.
 
 ```bash
 git clone https://github.com/vinilana/jev-gateway-bench.git
@@ -126,16 +127,34 @@ BENCH_OPENCODE_UPSTREAM=http://127.0.0.1:8317/v1 npm run bench -- --agent openco
 Codex and Claude Code run clean by default: no MCP servers, plugins, skills or personal settings.
 Add `--user-tools` to measure your own setup instead. It changes the picture a lot: one setup here
 sent 285 tools and about 200,000 tokens with every Claude Code request, against 6 tools and 7,000
-tokens clean. OpenCode runs with `--pure` (no external plugins), but still loads its configured
-provider and other personal settings; the OpenCode series is not equivalent to the clean-agent
-condition of the original six-model series.
+tokens clean. OpenCode v2 runs with `--standalone --auto` in the task workspace. It uses a private
+server and disables external plugins, as `--pure` did in v1, while retaining built-in OpenCode
+plugins needed for its agent and tools. It still loads configured providers and other personal
+settings; its runs are not equivalent to the clean-agent condition of the original six-model series.
 
-OpenCode requires `--model provider/model`. Its selected provider must exist in your OpenCode
-config with a working credential. Set `BENCH_OPENCODE_UPSTREAM` to that provider's real API base
+OpenCode v2 requires `--model provider/model` (or `provider/model#variant` for an explicit effort
+variant). Its selected provider must exist in your OpenCode config with a working credential. Set
+`BENCH_OPENCODE_UPSTREAM` to that provider's real API base
 URL (the default is OpenCode Zen). The runner moves only the selected provider's `baseURL` to its
-isolated gateway for that process. It does not write your OpenCode config. Use a dedicated
-credential if you want to compare the same provider account across machines; the published
+isolated gateway for that process and passes the variant on the CLI, not in the root model setting.
+It does not write your OpenCode config. Use a dedicated credential if you want to compare the same
+provider account across machines; the published
 OpenCode series used a locally configured CLI Proxy API.
+
+For OpenCode v2, the runner sets `PWD` to the task workspace as well as starting the process there.
+The CLI uses `PWD` to choose its project; `cwd` alone is not enough. Before each paid session, a
+no-network preflight creates a session with the installed CLI and checks its exported location. A
+missing session or a location outside the workspace stops the series before the gateway or agent
+starts. Check this without running an eval:
+
+```bash
+node run.mjs --agent opencode --model opencode/glm-5.3-flash#high --tasks chess-bugfix --modes off --preflight-only
+```
+
+The isolation test passed with the installed CLI, and the runner's five OpenCode tests passed. This
+only validates session location and the fail-stop guard; it is not a `high` or `max` eval. The earlier
+GLM 5.3 Flash `high` and interrupted `max` runs used the wrong project and are excluded from any
+comparison. They have not been rerun after this correction.
 
 **Real agents spend real quota.** Every run is a full agent session. Start with one task and
 `--reps 1`, look at the numbers, and scale up from there.
